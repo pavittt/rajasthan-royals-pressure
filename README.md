@@ -2,7 +2,8 @@
 
 SupeRR Selector Season 2, Round 1.
 
-- **Dashboard:** https://pavittt.github.io/rajasthan-royals-pressure/
+- **Dashboard (RR under pressure, trades, all 10 teams, auction plan):** https://pavittt.github.io/rajasthan-royals-pressure/
+- **Report page:** https://pavittt.github.io/rajasthan-royals-pressure/report.html
 - **Methodology report (PDF):** [SupeRR_Round1_Report.pdf](SupeRR_Round1_Report.pdf)
 - **Code:** `code/` (run `run_all.sh` with the supplied data pack; all thresholds are in `config.py`)
 
