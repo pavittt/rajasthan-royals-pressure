@@ -1,0 +1,185 @@
+team_name,player_id,player_name,intl
+Chennai Super Kings,2417,Akeal Hosein,True
+Chennai Super Kings,27964,Anshul Kamboj,True
+Chennai Super Kings,48504,Ayush Mhatre,False
+Chennai Super Kings,25213,Dewald Brevis,True
+Chennai Super Kings,23467,Gurjapneet Singh,True
+Chennai Super Kings,6166,Jack Edwards,True
+Chennai Super Kings,2382,Jamie Overton,True
+Chennai Super Kings,46137,Kartik Sharma,False
+Chennai Super Kings,4391,Liam Livingstone,True
+Chennai Super Kings,7250,Mukesh Choudhary,False
+Chennai Super Kings,7967,Noor Ahmad,True
+Chennai Super Kings,6161,Rahul Chahar,True
+Chennai Super Kings,35072,Ramakrishna Ghosh,False
+Chennai Super Kings,6059,Ruturaj Gaikwad,True
+Chennai Super Kings,2258,Sanju Samson,True
+Chennai Super Kings,3645,Sarfaraz Khan,False
+Chennai Super Kings,4755,Shivam Dube,True
+Chennai Super Kings,3469,Shreyas Gopal,False
+Chennai Super Kings,6457,Urvil Patel,False
+Delhi Capitals,8101,Ashutosh Sharma,True
+Delhi Capitals,8141,Auqib Nabi,False
+Delhi Capitals,2876,Axar Patel,True
+Delhi Capitals,1077,David Miller,True
+Delhi Capitals,953,Lokesh Rahul,True
+Delhi Capitals,3697,Kyle Jamieson,True
+Delhi Capitals,4641,Lungi Ngidi,True
+Delhi Capitals,56830,Madhav Tiwari,False
+Delhi Capitals,5041,Mukesh Kumar,True
+Delhi Capitals,5928,Prithvi Shaw,False
+Delhi Capitals,4703,Rishabh Pant,True
+Delhi Capitals,8238,Sameer Rizvi,True
+Delhi Capitals,32244,Tripurana Vijay,False
+Delhi Capitals,20702,Tristan Stubbs,True
+Delhi Capitals,46066,Vipraj Nigam,True
+Delhi Capitals,4824,Zeeshan Ansari,False
+Gujarat Titans,6467,Anuj Rawat,True
+Gujarat Titans,28018,Ashok Sharma,True
+Gujarat Titans,4853,Glenn Phillips,True
+Gujarat Titans,27970,Gurnoor Brar,True
+Gujarat Titans,2261,Harshal Patel,True
+Gujarat Titans,2633,Jason Holder,True
+Gujarat Titans,3320,Jayant Yadav,False
+Gujarat Titans,813,Jos Buttler,True
+Gujarat Titans,3628,Kagiso Rabada,True
+Gujarat Titans,8251,Kumar Kushagra,True
+Gujarat Titans,34969,Manav Suthar,False
+Gujarat Titans,5944,Mohammed Siraj,True
+Gujarat Titans,20005,Arshad Khan,False
+Gujarat Titans,26830,Nishant Kumar Sindhu,True
+Gujarat Titans,4489,Prasidh Krishna,True
+Gujarat Titans,5577,Sai Kishore,True
+Gujarat Titans,3926,Rahul Tewatia,False
+Gujarat Titans,4722,Rashid Khan,True
+Gujarat Titans,23450,Sai Sudharsan,True
+Gujarat Titans,6288,Shubman Gill,True
+Gujarat Titans,6273,Tom Banton,True
+Gujarat Titans,4823,Washington Sundar,True
+Kolkata Knight Riders,26906,Angkrish Raghuvanshi,False
+Kolkata Knight Riders,6284,Anukul Roy,False
+Kolkata Knight Riders,5939,Cameron Green,True
+Kolkata Knight Riders,4847,Finn Allen,True
+Kolkata Knight Riders,29888,Harshit Rana,True
+Kolkata Knight Riders,8530,Kartik Tyagi,False
+Kolkata Knight Riders,198,Manish Pandey,False
+Kolkata Knight Riders,27956,Prashant Solanki,False
+Kolkata Knight Riders,20006,Ramandeep Singh,True
+Kolkata Knight Riders,4708,Rinku Singh,True
+Kolkata Knight Riders,4986,Rovman Powell,True
+Kolkata Knight Riders,7534,Sarthak Ranjan,False
+Kolkata Knight Riders,28021,Saurabh Dubey,False
+Kolkata Knight Riders,781,Sunil Narine,False
+Kolkata Knight Riders,3700,Tim Seifert,True
+Kolkata Knight Riders,8746,Vaibhav Arora,True
+Kolkata Knight Riders,6256,Varun Chakravarthy,True
+Lucknow Super Giants,7446,Abdul Samad,False
+Lucknow Super Giants,3605,Aiden Markram,True
+Lucknow Super Giants,7896,Akash Singh,False
+Lucknow Super Giants,31518,Akshat Raghuwanshi,False
+Lucknow Super Giants,7060,Arjun Tendulkar,False
+Lucknow Super Giants,42845,Arshin Kulkarni,False
+Lucknow Super Giants,6460,Ayush Badoni,True
+Lucknow Super Giants,58134,Digvesh Rathi,False
+Lucknow Super Giants,4736,Josh Inglis,True
+Lucknow Super Giants,3644,Kuldeep Yadav,True
+Lucknow Super Giants,27960,Mayank Yadav,True
+Lucknow Super Giants,818,Mitchell Marsh,True
+Lucknow Super Giants,6669,Mohsin Khan,False
+Lucknow Super Giants,45749,Mukul Choudhary,False
+Lucknow Super Giants,3125,Nicholas Pooran,True
+Lucknow Super Giants,58246,Prince Yadav,True
+Lucknow Super Giants,4409,Sam Curran,True
+Lucknow Super Giants,7472,Shahbaz Ahmed,True
+Mumbai Indians,6464,Arshdeep Singh,True
+Mumbai Indians,8634,Ashwani Kumar,False
+Mumbai Indians,3629,Corbin Bosch,True
+Mumbai Indians,2933,Jasprit Bumrah,True
+Mumbai Indians,4101,Mitchell Santner,True
+Mumbai Indians,37052,Naman Dhir,True
+Mumbai Indians,2101,Quinton de Kock,True
+Mumbai Indians,6359,Raghu Sharma,False
+Mumbai Indians,26834,Raj Bawa,False
+Mumbai Indians,126,Rohit Sharma,True
+Mumbai Indians,4007,Ryan Rickelton,True
+Mumbai Indians,2847,Shardul Thakur,True
+Mumbai Indians,6725,Sherfane Rutherford,True
+Mumbai Indians,1699,Suryakumar Yadav,True
+Mumbai Indians,7897,Namboori Tilak Varma,True
+Mumbai Indians,6272,William Jacks,True
+Punjab Kings,6676,Azmatullah Omarzai,True
+Punjab Kings,3641,Ben Dwarshuis,True
+Punjab Kings,8654,Cooper Connolly,True
+Punjab Kings,3330,Hardik Pandya,True
+Punjab Kings,26911,Harnoor Pannu,False
+Punjab Kings,7325,Harpreet Brar,False
+Punjab Kings,7808,Marco Jansen,True
+Punjab Kings,2639,Marcus Stoinis,True
+Punjab Kings,37731,Musheer Khan,False
+Punjab Kings,7216,Prabhsimran Singh,True
+Punjab Kings,25669,Priyansh Arya,True
+Punjab Kings,2756,Shashank Singh,False
+Punjab Kings,3647,Shreyas Iyer,True
+Punjab Kings,7625,Suryansh Shedge,True
+Punjab Kings,4211,Vishnu Vinod,False
+Punjab Kings,4487,Vyshak Kumar,True
+Punjab Kings,5738,Xavier Bartlett,True
+Punjab Kings,6287,Yash Thakur,True
+Punjab Kings,1612,Yuzvendra Chahal,True
+Rajasthan Royals,47523,Aman Rao Perala,False
+Rajasthan Royals,67036,Brijesh Sharma,False
+Rajasthan Royals,2436,Dasun Shanaka,True
+Rajasthan Royals,7260,Dhruv Jurel,True
+Rajasthan Royals,8182,Donovan Ferreira,True
+Rajasthan Royals,3298,Jofra Archer,True
+Rajasthan Royals,43798,Lhuan Pretorius,True
+Rajasthan Royals,6237,Manimaran Siddharth,False
+Rajasthan Royals,1566,Mohammed Shami,True
+Rajasthan Royals,7312,Nandre Burger,True
+Rajasthan Royals,7503,Ravi Bishnoi,True
+Rajasthan Royals,152,Ravindra Jadeja,True
+Rajasthan Royals,6423,Riyan Parag,True
+Rajasthan Royals,2411,Sandeep Sharma,False
+Rajasthan Royals,25139,Shubham Dubey,False
+Rajasthan Royals,7269,Sushant Mishra,False
+Rajasthan Royals,50284,Vaibhav Sooryavanshi,True
+Rajasthan Royals,41503,Yash Punja,False
+Rajasthan Royals,6819,Yashasvi Jaiswal,True
+Royal Challengers Bengaluru,58727,Abhinandan Singh,False
+Royal Challengers Bengaluru,360,Bhuvneshwar Kumar,True
+Royal Challengers Bengaluru,6314,Devdutt Padikkal,False
+Royal Challengers Bengaluru,22920,Jacob Duffy,True
+Royal Challengers Bengaluru,3916,Jitesh Sharma,True
+Royal Challengers Bengaluru,7744,Jordan Cox,True
+Royal Challengers Bengaluru,830,Josh Hazlewood,True
+Royal Challengers Bengaluru,66540,Kanishk Chouhan,False
+Royal Challengers Bengaluru,4219,Krunal Pandya,False
+Royal Challengers Bengaluru,19312,Nuwan Thushara,True
+Royal Challengers Bengaluru,5553,Phil Salt,True
+Royal Challengers Bengaluru,5039,Rajat Patidar,False
+Royal Challengers Bengaluru,7327,Rasikh Salam,True
+Royal Challengers Bengaluru,6726,Romario Shepherd,True
+Royal Challengers Bengaluru,36982,Suyash Sharma,True
+Royal Challengers Bengaluru,6396,Tim David,True
+Royal Challengers Bengaluru,7544,Venkatesh Iyer,True
+Royal Challengers Bengaluru,26836,Vicky Ostwal,False
+Royal Challengers Bengaluru,47,Virat Kohli,True
+Royal Challengers Bengaluru,7322,Yash Dayal,True
+Sunrisers Hyderabad,6281,Abhishek Sharma,True
+Sunrisers Hyderabad,47370,Aniket Verma,False
+Sunrisers Hyderabad,6097,Brydon Carse,True
+Sunrisers Hyderabad,39657,Eshan Malinga,True
+Sunrisers Hyderabad,25138,Harsh Dubey,True
+Sunrisers Hyderabad,4260,Heinrich Klaasen,True
+Sunrisers Hyderabad,4117,Ishan Kishan,True
+Sunrisers Hyderabad,4816,Khaleel Ahmed,True
+Sunrisers Hyderabad,62526,Krains Fuletra,False
+Sunrisers Hyderabad,7920,Nathan Ellis,True
+Sunrisers Hyderabad,8221,Nitish Reddy,True
+Sunrisers Hyderabad,1758,Patrick Cummins,True
+Sunrisers Hyderabad,25132,Praful Hinge,False
+Sunrisers Hyderabad,35318,Sakib Hussain,False
+Sunrisers Hyderabad,25679,Salil Arora,False
+Sunrisers Hyderabad,56817,Shivang Kumar,False
+Sunrisers Hyderabad,33067,Ravichandran Smaran,False
+Sunrisers Hyderabad,4265,T Natarajan,False

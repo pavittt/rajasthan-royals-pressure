@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RR's Pressure Moments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout: one reading column for the story, full-width bands for charts and tables. RR pink as the accent, royal blue for the league, gold for champions. */
+  --bg:#f6f5f8; --panel:#ffffff; --ink:#1c1a2b; --muted:#625f74; --line:#e2dfea;
+  --accent:#d1176f; --league:#3a5fb0; --champ:#b8860b; --good:#1f8a5b; --bad:#c2372f;
+  --display:"Barlow Condensed","Arial Narrow",sans-serif; --body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#14131c; --panel:#1d1c28; --ink:#ecebf3; --muted:#a5a2b8; --line:#33313f;
+  --accent:#ff4fa0; --league:#7b9cf0; --champ:#e0b44a; --good:#4cc38a; --bad:#ff7a6e; color-scheme: dark; } }
+:root[data-theme="dark"]{ --bg:#14131c; --panel:#1d1c28; --ink:#ecebf3; --muted:#a5a2b8; --line:#33313f;
+  --accent:#ff4fa0; --league:#7b9cf0; --champ:#e0b44a; --good:#4cc38a; --bad:#ff7a6e; color-scheme: dark; }
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+main{max-width:1180px;margin:0 auto;padding:28px 20px 60px;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:.01em;text-wrap:balance;margin:0}
+h1{font-size:clamp(34px,5vw,52px);line-height:1.02}
+h2{font-size:30px;line-height:1.1}
+h3{font-size:21px}
+p{margin:0;max-width:72ch}
+.lede{font-size:19px;color:var(--muted);max-width:68ch}
+.eyebrow{font-family:var(--display);font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;font-size:15px}
+section{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:14px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.tile{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:14px 16px}
+.tile b{display:block;font-family:var(--display);font-size:36px;line-height:1;font-variant-numeric:tabular-nums}
+.tile span{color:var(--muted);font-size:14px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.step{border:1px solid var(--line);border-radius:8px;padding:14px}
+.step .n{font-family:var(--display);font-size:28px;color:var(--accent);line-height:1}
+.ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg button{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:6px 12px;cursor:pointer}
+.seg button:first-child{border-radius:6px 0 0 6px}.seg button:last-child{border-radius:0 6px 6px 0}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+button:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th{text-align:left;color:var(--muted);font-weight:600;border-bottom:1px solid var(--line);padding:7px 8px;vertical-align:bottom;white-space:nowrap}
+td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;white-space:nowrap}
+.good{color:var(--good);font-weight:600}.bad{color:var(--bad);font-weight:600}.muted{color:var(--muted)}
+.pill{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;border:1px solid var(--line);white-space:nowrap}
+.pill.keep{border-color:var(--good);color:var(--good)}.pill.drop{color:var(--muted)}
+.pill.rr{border-color:var(--accent);color:var(--accent)}.pill.buy{border-color:var(--league);color:var(--league)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:middle}
+.chart{position:relative;width:100%}
+.chart svg{display:block;width:100%;height:auto}
+.chart text{font-family:var(--body);fill:var(--muted);font-size:12px}
+.tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--line);box-shadow:0 4px 14px rgba(0,0,0,.15);border-radius:6px;padding:6px 9px;font-size:13px;opacity:0;max-width:300px;z-index:5}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(460px,1fr));gap:16px}
+@media (max-width:520px){.grid2{grid-template-columns:1fr}}
+.note{font-size:14px;color:var(--muted)}
+ul{margin:0;padding-left:1.2em;max-width:75ch}
+li{margin:3px 0}
+@media print{ @page{size:A4;margin:12mm 10mm} html,body{background:#fff;font-size:12.5px} main{max-width:none;padding:0;gap:14px}
+ section{break-inside:auto;padding:14px} h2{font-size:24px;break-after:avoid} h3{break-after:avoid} table{font-size:9.5px} th,td{padding:3px 4px!important;white-space:normal!important} .tw{overflow:visible!important} tr{break-inside:avoid} .ctl,.noprint{display:none!important}
+ .printonly{display:block!important} .chart svg{min-width:0!important} .tip{display:none} .tile b{font-size:28px} .pb{break-before:page} .grid2{grid-template-columns:1fr 1fr} #rr .grid2{grid-template-columns:1fr} }
+.printonly{display:none}
+.box{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:12px 14px;background:var(--bg)}
+ol.lists{margin:0;padding-left:1.4em} ol.lists li{margin:2px 0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+<header style="display:flex;flex-direction:column;gap:10px">
+  <div class="eyebrow">SupeRR Selector Season 2 · Round 1 · Methodology report and dashboard</div>
+  <h1>Who wins the moments Rajasthan Royals lose?</h1>
+  <p class="lede">Pressure, defined from the data: the 48 spots where the champions beat the league and RR fall short, on balls where the result can still swing. Each player is rated on those balls against the league and against his own usual level, on IPL 2025–26 (2026 counts most), and must be in current form in IPL 2026.</p>
+</header>
+
+<div class="tiles" id="tiles"></div>
+
+<section id="answer">
+  <h2>The answer: final top 10s</h2>
+  <div class="grid2"><div class="box"><h3>Batters</h3><ol class="lists" id="ans-bat"></ol></div><div class="box"><h3>Bowlers</h3><ol class="lists" id="ans-bowl"></ol></div></div>
+  <p class="note">The same lists are entered on Unstop. Full numbers, rank ranges and each player's 2025 and 2026 IPL record are below.</p>
+</section>
+
+<section id="brief">
+  <h2>What the brief asks, and where it is answered</h2>
+  <div class="tw"><table><thead><tr><th>Brief asks for</th><th>How it is done here</th></tr></thead><tbody>
+  <tr><td>Two ordered top-10 lists</td><td>Batters and bowlers, ranked 1–10 by one score (<a href="#top10">top 10s</a>).</td></tr>
+  <tr><td>Pressure definition, and how it differs from ordinary play</td><td>RR's 48 moments, live balls only. Pressure balls swing the result <span class="sw-b"></span> as much as ordinary balls (<a href="#theory">method</a>, <a href="#moments">moments</a>).</td></tr>
+  <tr><td>Performance compared with usual level</td><td>Score = P + D: pressure level plus pressure minus the player's own usual level (<a href="#theory">method</a>).</td></tr>
+  <tr><td>Works for batting and bowling</td><td>One formula and one code path for both sides.</td></tr>
+  <tr><td>Fair comparisons: samples, eligibility, contexts, IPL and T20I</td><td>Context-adjusted ball values, shrinkage for small samples, fixed eligibility and current-form rules, IPL weighted above T20I (<a href="#theory">method</a>).</td></tr>
+  <tr><td>Evidence for the top 10</td><td>Tables, rank ranges and 2025 v 2026 form for every player (<a href="#top10">top 10s</a>, <a href="#form">form check</a>).</td></tr>
+  <tr><td>Reliability, consistency and limitations</td><td>Every simulation and check run, split-half, season-to-season, bootstrap and 22 pre-declared alternatives (<a href="#sims">simulations</a>, <a href="#reliability">reliability</a>, <a href="#limits">limits</a>).</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="theory">
+  <h2>The method in four steps</h2>
+  <div class="steps">
+    <div class="step"><div class="n">1</div><h3>Find the moments</h3><p>1,169 narrow situations were tested in every phase: an over band plus up to two of batting position, batter hand, bowler type, delivery, wickets down, required rate, new batter, set partnership and match closeness. A situation became a moment only if the champions beat the league (luck chance under 10% against 1,000 random "champions") and RR 2025–26 fell short (below the league in at least 85% of 1,000 resamples of RR's matches), with plain numbers agreeing. After removing duplicates: 48 moments, 24 batting and 24 bowling.</p></div>
+    <div class="step"><div class="n">2</div><h3>Keep live balls, weight the big leaks</h3><p>Within the moments, a ball counts as pressure only when the result can still swing: its leverage (expected change in win probability, from an out-of-fold win-probability model) is at or above the median. Each ball counts once. A ball in a bigger RR gap counts more (scaled to average 1, capped at 3×).</p></div>
+    <div class="step"><div class="n">3</div><h3>Rate the players</h3><p>Each ball is valued in runs above the league expectation for the same format, year, innings, over, wickets and required rate. Wickets are priced by win-probability cost, and each ball is adjusted for the opposition. P = value per pressure ball. U = value per ordinary ball. D = P − U. Score = P + D, both shrunk by empirical Bayes for small samples. The same formula is used for batters and bowlers.</p></div>
+    <div class="step"><div class="n">4</div><h3>Fair and current</h3><p>Evidence weights: IPL 2026 1.0, IPL 2025 0.7, T20Is between the top nine nations 0.5 (2026) and 0.35 (2025). Nothing before 2025 counts. Eligibility, fixed before ranking: 40+ effective pressure balls (20+ IPL); bowlers 2+ overs a match; <b>5+ IPL matches in 2026</b>; and <b>not below the league under pressure in 2026</b> (more than half a standard error below is out). No player is counted as average for missing data.</p></div>
+  </div>
+</section>
+
+<section id="moments">
+  <h2>RR's 48 pressure moments</h2>
+  <p>Each row is one moment, measured on IPL 2025–26 balls. It shows RR, the league and the champions in runs above expectation per 100 balls (for bowlers, runs saved). Pink is RR, blue the league, gold the champions. Faded rows do not hold up in both seasons; they are still used, and the check without them is in the sensitivity table.</p>
+  <div class="ctl"><div class="seg" role="group" aria-label="Side"><button id="m-bat" aria-pressed="true">Batting</button><button id="m-bowl" aria-pressed="false">Bowling</button></div>
+  <span class="note" id="m-count"></span></div>
+  <div class="legend"><span><span class="sw" style="background:var(--accent)"></span>RR 2025–26</span><span><span class="sw" style="background:var(--league)"></span>League</span><span><span class="sw" style="background:var(--champ)"></span>Champions (RCB)</span></div>
+  <div class="chart noprint" id="mchart"></div>
+  <div class="printonly"><h3>Batting moments</h3><div class="chart" id="mchart-bat"></div><h3 class="pb">Bowling moments</h3><div class="chart" id="mchart-bowl"></div></div>
+</section>
+
+<section id="audit">
+  <h2>Every matchup, checked</h2>
+  <p>Batting position and hand × bowler type × phase. Each cell shows RR's wins a season gained (+) or lost (−) against the league in that matchup, over IPL 2022–26. Red is worse than the league, green better. Blank cells had too few RR balls. Point at a cell to see strike rate or economy.</p>
+  <div class="ctl"><div class="seg" role="group" aria-label="Side"><button id="g-bat" aria-pressed="true">RR batting</button><button id="g-bowl" aria-pressed="false">RR bowling</button></div>
+    <label for="g-ph" class="note">Phase</label><select id="g-ph"><option>Middle (7-15)</option><option>Death (16-20)</option><option>Powerplay (1-6)</option></select></div>
+  <div class="chart tw noprint" id="gchart"></div>
+  <div class="printonly"><h3>RR batting, middle overs</h3><div class="chart" id="gchart-bat"></div><h3>RR bowling, middle overs</h3><div class="chart" id="gchart-bowl"></div></div>
+</section>
+
+<section id="top10">
+  <h2>Official top 10s: best in RR's pressure moments</h2>
+  <p>Every eligible player is ranked, whichever team he plays for. <span id="elig-note"></span> Score is in runs per 100 pressure balls above league expectation (P + D). Rank range is the 5th–95th percentile over 1,000 resamples of matches.</p>
+  <h3>Batters</h3><div class="tw" id="t-bat"></div>
+  <h3>Bowlers</h3><div class="tw" id="t-bowl"></div>
+  <h3>How sure are the ranks?</h3>
+  <div class="ctl"><div class="seg" role="group" aria-label="Side"><button id="r-bat" aria-pressed="true">Batters</button><button id="r-bowl" aria-pressed="false">Bowlers</button></div></div>
+  <div class="chart noprint" id="rchart"></div>
+  <div class="printonly"><div class="grid2"><div class="chart" id="rchart-bat"></div><div class="chart" id="rchart-bowl"></div></div></div>
+  <p class="note">The dot is the rank, the bar the 90% range. The top three or four on each side are clearly ahead; the order lower down is less certain than who is in the list.</p>
+</section>
+
+<section id="form" class="pb">
+  <h2>Form check: every listed player, IPL 2025 and IPL 2026</h2>
+  <p>Plain numbers, so anyone can check that each pick is current. "In RR's moments" means the pressure balls used for the score. Players with one IPL 2026 match (Pathirana) or a clear 2026 drop under pressure (Shardul Thakur, Dewald Brevis, Mitchell Starc, Shimron Hetmyer) fail the current-form rule and are not ranked.</p>
+  <h3>Batters</h3><div class="tw" id="f-bat"></div>
+  <h3>Bowlers</h3><div class="tw" id="f-bowl"></div>
+</section>
+
+<section id="sims">
+  <h2>Every simulation and check we ran</h2>
+  <div class="tw"><table><thead><tr><th>Step</th><th>What was run</th><th>Size</th><th>Result</th></tr></thead><tbody id="simrows"></tbody></table></div>
+</section>
+
+<section id="rr" class="pb">
+  <h2>For RR's 2027 auction</h2>
+  <p>The same score and the same rules, filtered to players RR could buy: released players in the auction pool, plus players on no 2027 list. Squad and release status were entered by hand from the retention news of 17–18 November 2026; they are not part of the supplied data.</p>
+  <div class="grid2"><div><h3>Bowlers RR can buy</h3><div class="tw" id="b-bowl"></div></div><div><h3>Batters RR can buy</h3><div class="tw" id="b-bat"></div><p class="note" id="b-bat-note"></p></div></div>
+  <h3>RR's own squad on the same score</h3>
+  <div class="tw" id="rr-bat"></div><div class="tw" id="rr-bowl"></div>
+  <h3>Auction plan: six slots, ladders and walk-away caps</h3><div class="tw" id="plan"></div><p class="note" id="plan-note"></p>
+  <h3>RR's trades and releases</h3><p class="note">Same score, but rated without the current-form rule so every moved player gets a number. On this run the pool average is about 0, so a negative score means below the league in RR's moments.</p><div class="tw" id="moves"></div>
+  <h3>RR's squad against the best buys, area by area (runs per 100 balls v league in RR's moments)</h3><div class="tw" id="cmp"></div>
+</section>
+
+<section id="reliability">
+  <h2>Reliability and stability</h2>
+  <div class="tiles" id="reltiles"></div>
+  <p>Split-half: the matches were split in two at random 100 times and each half's scores compared. With only two seasons and narrow pressure moments, the final score barely repeats between random halves of matches (near zero for both sides), while the 2025-only and 2026-only rankings agree moderately. This is the main limit of the method: who is in the lists is firmer than the order inside them, as the rank ranges show.</p>
+  <h3>Pre-declared alternatives</h3>
+  <p class="note">Each row changes one setting and re-runs the whole pipeline. Overlap is how many of the official top 10 stay in that alternative's top 10.</p>
+  <div class="tw" id="sens"></div>
+</section>
+
+<section id="limits">
+  <h2>Limits</h2>
+  <ul>
+    <li>The moments come from RR's own weak spots, so this ranks who wins the moments RR lose. A general rule (top 25% leverage balls) gives a very different batting list; it is reported in the alternatives table.</li>
+    <li>No single moment passes a strict false-discovery test on its own. The live-ball filter, shrinkage, the both-seasons check and the resampling guard against chance.</li>
+    <li>Only two seasons are scored, so split-half repeatability of the final score is low and ranks below about 4th are uncertain. The lists are more certain than the order within them.</li>
+    <li>The data has no birth dates, so age is not modelled. Current form is handled by the 2026 weighting and the current-form rule.</li>
+    <li>For bowlers, the pressure-minus-usual part (D) barely repeats, so it is shrunk to almost the same value for everyone and bowling ranks rest on pressure level (P).</li>
+  </ul>
+</section>
+
+<section id="repro">
+  <h2>Reproducibility</h2>
+  <p>Every step is a numbered script that reads its inputs and writes its outputs (run_all.sh). All thresholds sit in config.py and were fixed before the rankings were read; the current-form rule and its two alternatives are in the sensitivity table. The code is supplied with this report.</p>
+</section>
+</main>
+<div class="tip" id="tip"></div>
+<script>
+const J = /*DATA*/null;
+const $ = s => document.querySelector(s);
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const f1 = v => v == null ? "—" : (Math.round(v * 10) / 10).toFixed(1);
+const f0 = v => v == null ? "—" : Math.round(v).toString();
+const sg = v => v == null ? "—" : (v > 0 ? "+" : "") + f1(v);
+const tip = $("#tip");
+function showTip(ev, html){ tip.innerHTML = html; tip.style.opacity = 1; const w = tip.offsetWidth; let x = ev.pageX + 12; if (x + w > window.scrollX + document.documentElement.clientWidth - 8) x = ev.pageX - w - 12; tip.style.left = x + "px"; tip.style.top = (ev.pageY + 12) + "px"; }
+function hideTip(){ tip.style.opacity = 0; }
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function seg(ids, cb){ ids.forEach(id => $("#" + id).addEventListener("click", () => { ids.forEach(j => $("#" + j).setAttribute("aria-pressed", j === id)); cb(id); })); }
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, parent){ const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+
+// tiles + answer
+const M = J.moments.map(m => ({...m, holds: m.kept})), kept = s => M.filter(m => m.side === s && m.holds).length;
+$("#tiles").innerHTML = [
+  [M.length, "pressure moments where champions beat the league and RR fall short (24 batting, 24 bowling)"],
+  [f1(J.bat.pressure.swing_ratio_pressure) + "×", "how much more the result swings on a batting pressure ball than on an ordinary one"],
+  [f1(J.bowl.pressure.swing_ratio_pressure) + "×", "the same for bowling pressure balls"],
+  [J.bat.eligible + " / " + J.bowl.eligible, "eligible batters / bowlers after the fixed and current-form rules"],
+].map(([b, s]) => `<div class="tile"><b>${b}</b><span>${s}</span></div>`).join("");
+$("#ans-bat").innerHTML = J.bat.official.map(r => `<li>${esc(r.player)}</li>`).join("");
+$("#ans-bowl").innerHTML = J.bowl.official.map(r => `<li>${esc(r.player)}</li>`).join("");
+document.querySelectorAll(".sw-b").forEach(e => e.textContent = `${f1(J.bat.pressure.swing_ratio_pressure)}× (batting) and ${f1(J.bowl.pressure.swing_ratio_pressure)}× (bowling)`);
+$("#elig-note").textContent = `After the fixed rules and the current-form rule, ${J.bat.eligible} batters and ${J.bowl.eligible} bowlers are eligible.`;
+const PRINT = matchMedia("print").matches || /print=1/.test(location.search);
+
+// moments chart
+function drawMoments(side, boxSel = "#mchart"){
+  const rows = M.filter(m => m.side === side).sort((a, b) => b.gap_per_ball - a.gap_per_ball);
+  if (boxSel === "#mchart") $("#m-count").textContent = `all ${rows.length} used · ${rows.filter(r => r.holds).length} hold up both seasons`;
+  const box = $(boxSel); box.innerHTML = "";
+  const W = Math.max(340, box.clientWidth || 1000), small = W < 640, L = small ? 0 : Math.min(420, W * 0.45), rh = small ? 42 : 24, top = 22;
+  const H = top + rows.length * rh + 26;
+  const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "RR, league and champions per moment"}, box);
+  const vals = rows.flatMap(r => [r.rr_per100, r.league_per100, r.champ_per100]).filter(v => v != null);
+  const lo = Math.min(-60, Math.floor(Math.min(...vals) / 20) * 20), hi = Math.max(60, Math.ceil(Math.max(...vals) / 20) * 20);
+  const x0 = small ? 8 : L + 10, x1 = W - 12, X = v => x0 + (v - lo) / (hi - lo) * (x1 - x0);
+  for (let v = lo; v <= hi; v += 20){ el("line", {x1: X(v), x2: X(v), y1: top - 6, y2: H - 22, stroke: v === 0 ? css("--muted") : css("--line"), "stroke-width": v === 0 ? 1.2 : 1}, svg); const t = el("text", {x: X(v), y: H - 6, "text-anchor": "middle"}, svg); t.textContent = v; }
+  const t0 = el("text", {x: x1, y: 12, "text-anchor": "end"}, svg); t0.textContent = "runs above league expectation per 100 balls →";
+  rows.forEach((r, i) => {
+    const y = top + i * rh + (small ? 28 : rh / 2), op = r.holds ? 1 : 0.45;
+    const lab = el("text", {x: small ? 8 : L, y: small ? y - 14 : y + 4, "text-anchor": small ? "start" : "end", fill: css("--ink"), opacity: op}, svg);
+    lab.textContent = `${r.id} ${r.label}`.slice(0, small ? 60 : 70);
+    const pts = [r.rr_per100, r.league_per100, r.champ_per100].filter(v => v != null);
+    el("line", {x1: X(Math.min(...pts)), x2: X(Math.max(...pts)), y1: y, y2: y, stroke: css("--line"), "stroke-width": 3, opacity: op}, svg);
+    [["champ_per100", "--champ"], ["league_per100", "--league"], ["rr_per100", "--accent"]].forEach(([k, c]) => { if (r[k] != null) el("circle", {cx: X(r[k]), cy: y, r: 5.5, fill: css(c), opacity: op}, svg); });
+    const hit = el("rect", {x: 0, y: y - rh / 2, width: W, height: rh, fill: "transparent"}, svg);
+    hit.addEventListener("pointermove", ev => showTip(ev, `<b>${esc(r.id)} ${esc(r.label)}</b><br>RR ${sg(r.rr_per100)} · league ${sg(r.league_per100)} · champions ${sg(r.champ_per100)}<br>RR v league: 2025 ${sg(r.rr_minus_league_2025)}, 2026 ${sg(r.rr_minus_league_2026)}<br>RR balls ${r.rr_balls}<br>${r.holds ? "<b>Holds up both seasons</b>" : "Used; does not hold up both seasons: " + esc(r.why_not)}`));
+    hit.addEventListener("pointerleave", hideTip);
+  });
+}
+seg(["m-bat", "m-bowl"], id => drawMoments(id === "m-bat" ? "bat" : "bowl")); drawMoments("bat"); drawMoments("bat", "#mchart-bat"); drawMoments("bowl", "#mchart-bowl");
+
+// matchup heatmap
+const ROWS = ["Openers, right-hander","Openers, left-hander","No. 3-4, right-hander","No. 3-4, left-hander","No. 5-7, right-hander","No. 5-7, left-hander","No. 8-11, right-hander","No. 8-11, left-hander"];
+const COLS = ["Right-arm pace","Left-arm pace","Off-spin","Left-arm finger spin","Leg-spin","Left-arm wrist spin"];
+let gside = "batting";
+function drawGrid(gs = gside, ph = $("#g-ph").value, boxSel = "#gchart"){
+  const rows = J.grid.filter(g => g.side === gs && g.c === ph);
+  const box = $(boxSel); box.innerHTML = "";
+  const W = Math.max(640, box.clientWidth || 1000), L = 170, top = 34, cw = (W - L - 8) / COLS.length, ch = 34, H = top + ROWS.length * ch + 6;
+  const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, style: `min-width:${W}px`, role: "img", "aria-label": "Matchup heatmap"}, box);
+  COLS.forEach((c, j) => { const t = el("text", {x: L + j * cw + cw / 2, y: 20, "text-anchor": "middle", fill: css("--ink")}, svg); t.textContent = c; });
+  const mx = Math.max(0.05, ...rows.filter(r => r.rr_balls >= 40).map(r => Math.abs(r.rr_raw_wins)));
+  ROWS.forEach((rn, i) => {
+    const t = el("text", {x: L - 8, y: top + i * ch + ch / 2 + 4, "text-anchor": "end", fill: css("--ink")}, svg); t.textContent = rn;
+    COLS.forEach((cn, j) => {
+      const r = rows.find(g => g.a === rn && g.b === cn), x = L + j * cw, y = top + i * ch;
+      const ok = r && r.rr_balls >= 40, v = ok ? r.rr_raw_wins : null;
+      el("rect", {x: x + 1, y: y + 1, width: cw - 2, height: ch - 2, rx: 4, fill: ok ? (v < 0 ? css("--bad") : css("--good")) : css("--bg"), "fill-opacity": ok ? 0.15 + 0.75 * Math.min(1, Math.abs(v) / mx) : 1, stroke: ok && /gap/i.test(r.verdict) ? css("--ink") : "none", "stroke-width": r && r.verdict === "Clear gap" ? 2.5 : 1}, svg);
+      if (ok){ const tt = el("text", {x: x + cw / 2, y: y + ch / 2 + 4, "text-anchor": "middle", fill: css("--ink")}, svg); tt.textContent = (v > 0 ? "+" : "") + v.toFixed(2); }
+      if (r){ const hit = el("rect", {x, y, width: cw, height: ch, fill: "transparent"}, svg);
+        const st = gs === "batting" ? `Strike rate: RR ${f0(r.rr_sr)} · league ${f0(r.lg_sr)}` : `Economy: RR ${f1(r.rr_econ)} · league ${f1(r.lg_econ)}`;
+        hit.addEventListener("pointermove", ev => showTip(ev, `<b>${esc(rn)} v ${esc(cn)}</b><br>${esc(ph)} · ${r.rr_balls} RR balls<br>${st}<br>RR wins a season v league ${sg(r.rr_raw_wins * 1)}<br>${esc(r.verdict)}`));
+        hit.addEventListener("pointerleave", hideTip); }
+    });
+  });
+}
+seg(["g-bat", "g-bowl"], id => { gside = id === "g-bat" ? "batting" : "bowling"; drawGrid(); }); $("#g-ph").addEventListener("change", () => drawGrid()); drawGrid(); drawGrid("batting", "Middle (7-15)", "#gchart-bat"); drawGrid("bowling", "Middle (7-15)", "#gchart-bowl");
+
+// tables
+function statusPill(s){ return s === "RR squad" ? `<span class="pill rr">RR</span>` : s.startsWith("Retained") ? `<span class="pill">${esc(s.replace("Retained by ", ""))}</span>` : `<span class="pill buy">${esc(s.startsWith("Released") ? "Auction pool" : "No 2027 list")}</span>`; }
+function table(target, rows, side, opts = {}){
+  const bat = side === "bat", stat = bat ? "SR" : "Econ", stat2 = bat ? "Balls per out" : "Balls per wkt";
+  const better = (p, u, hiGood) => p == null || u == null ? "" : ((hiGood ? p > u : p < u) ? "good" : "bad");
+  let h = `<table><thead><tr><th class="n">#</th><th>Player</th><th>2027 status</th><th class="n">Score</th><th class="n">Pressure ${stat}</th><th class="n">Usual ${stat}</th><th class="n">Pressure ${stat2}</th><th class="n">Usual</th><th class="n">Pressure balls</th><th class="n">IPL %</th>${opts.noRange ? "" : '<th class="n">Rank range</th>'}</tr></thead><tbody>`;
+  rows.forEach((r, i) => {
+    h += `<tr><td class="n">${opts.rankKey ? r[opts.rankKey] : r.rank}</td><td style="white-space:nowrap">${esc(r.player)}</td><td>${statusPill(r.status)}</td>
+      <td class="n ${r.SCORE >= 0 ? "good" : "bad"}">${sg(r.SCORE)}</td>
+      <td class="n ${better(r.pressure_stat, r.usual_stat, bat)}">${bat ? f0(r.pressure_stat) : f1(r.pressure_stat)}</td><td class="n">${bat ? f0(r.usual_stat) : f1(r.usual_stat)}</td>
+      <td class="n ${better(r.pressure_stat2, r.usual_stat2, bat)}">${f0(r.pressure_stat2)}</td><td class="n">${f0(r.usual_stat2)}</td>
+      <td class="n">${r.pressure_balls}</td><td class="n">${f0(r["pressure_balls_ipl_share_%"])}</td>${opts.noRange ? "" : `<td class="n">${r.rank_p05 ?? "—"}–${r.rank_p95 ?? "—"}</td>`}</tr>`;
+  });
+  $(target).innerHTML = h + "</tbody></table>";
+}
+table("#t-bat", J.bat.official, "bat"); table("#t-bowl", J.bowl.official, "bowl");
+table("#b-bowl", J.bowl.can_buy, "bowl", {rankKey: "buy_rank"}); table("#b-bat", J.bat.can_buy, "bat", {rankKey: "buy_rank"});
+$("#b-bat-note").textContent = `Only ${J.bat.can_buy.length === 1 ? "one batter RR can buy passes" : J.bat.can_buy.length + " batters RR can buy pass"} every rule. With a lower evidence bar (25 effective pressure balls) the next is ${J.bat.watch.filter(w => !J.bat.can_buy.some(c => c.player === w.player)).map(w => w.player + " (" + sg(w.SCORE) + ", thin evidence)").join(", ") || "nobody"}.`;
+table("#rr-bat", J.bat.rr, "bat", {noRange: true}); table("#rr-bowl", J.bowl.rr, "bowl", {noRange: true});
+$("#rr-bat").insertAdjacentHTML("afterbegin", `<h3>Batting (${J.bat.rr.length} eligible)</h3>`); $("#rr-bowl").insertAdjacentHTML("afterbegin", `<h3>Bowling (${J.bowl.rr.length} eligible)</h3>`);
+
+// rank interval chart
+function drawRanks(side, boxSel = "#rchart"){
+  const rows = J[side].official, box = $(boxSel); box.innerHTML = "";
+  const W = Math.max(340, box.clientWidth || 520), L = Math.min(190, W * 0.4), rh = 26, top = 10, H = top + rows.length * rh + 26;
+  const mx = Math.max(...rows.map(r => r.rank_p95 || 10));
+  const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Rank intervals"}, box);
+  const X = v => L + 10 + (v - 1) / (mx - 1) * (W - L - 30);
+  [1, 5, 10, 20, 30, 40, 50, 60, 70].filter(v => v <= mx).forEach(v => { el("line", {x1: X(v), x2: X(v), y1: top, y2: H - 22, stroke: v === 10 ? css("--muted") : css("--line"), "stroke-dasharray": v === 10 ? "4 3" : ""}, svg); const t = el("text", {x: X(v), y: H - 6, "text-anchor": "middle"}, svg); t.textContent = v; });
+  rows.forEach((r, i) => {
+    const y = top + i * rh + rh / 2;
+    const t = el("text", {x: L, y: y + 4, "text-anchor": "end", fill: css("--ink")}, svg); t.textContent = `${r.rank}. ${r.player}`;
+    el("line", {x1: X(r.rank_p05), x2: X(r.rank_p95), y1: y, y2: y, stroke: css("--accent"), "stroke-width": 4, "stroke-linecap": "round", opacity: 0.35}, svg);
+    el("circle", {cx: X(r.rank), cy: y, r: 6, fill: css("--accent")}, svg);
+    const hit = el("rect", {x: 0, y: y - rh / 2, width: W, height: rh, fill: "transparent"}, svg);
+    hit.addEventListener("pointermove", ev => showTip(ev, `<b>${esc(r.player)}</b><br>Rank ${r.rank}, 90% range ${r.rank_p05}–${r.rank_p95}<br>In the top 10 in ${Math.round(100 * r.p_top10)}% of resamples`)); hit.addEventListener("pointerleave", hideTip);
+  });
+}
+seg(["r-bat", "r-bowl"], id => drawRanks(id === "r-bat" ? "bat" : "bowl")); drawRanks("bat"); drawRanks("bat", "#rchart-bat"); drawRanks("bowl", "#rchart-bowl");
+
+
+// form check
+function formTable(sel, side){
+  const rows = J.form.filter(r => r.side === side);
+  let h = `<table><thead><tr><th>List</th><th class="n">#</th><th>Player</th><th class="n">IPL 2025 matches</th><th>IPL 2025</th><th>2025 in RR's moments</th><th class="n">IPL 2026 matches</th><th>IPL 2026</th><th>2026 in RR's moments</th></tr></thead><tbody>`;
+  rows.forEach(r => { h += `<tr><td>${esc(r.list)}</td><td class="n">${r.rank}</td><td style="white-space:nowrap">${esc(r.player)}</td><td class="n">${r.ipl25_matches}</td><td>${esc(r.ipl25)}</td><td>${esc(r.ipl25_pressure)}</td><td class="n">${r.ipl26_matches}</td><td>${esc(r.ipl26)}</td><td>${esc(r.ipl26_pressure)}</td></tr>`; });
+  $(sel).innerHTML = h + "</tbody></table>";
+}
+formTable("#f-bat", "Batting"); formTable("#f-bowl", "Bowling");
+// simulations
+$("#simrows").innerHTML = J.sims.map(s => `<tr><td>${esc(s[0])}</td><td>${esc(s[1])}</td><td>${esc(s[2])}</td><td>${esc(s[3])}</td></tr>`).join("");
+// auction
+function simple(sel, rows, cols){ let h = "<table><thead><tr>" + cols.map(c => `<th${c[2] ? ' class="n"' : ""}>${c[1]}</th>`).join("") + "</tr></thead><tbody>";
+  rows.forEach(r => { h += "<tr>" + cols.map(c => { const v = typeof c[0] === "function" ? c[0](r) : r[c[0]]; return `<td${c[2] ? ' class="n"' : ""}>${v == null ? "—" : esc(v)}</td>`; }).join("") + "</tr>"; }); $(sel).innerHTML = h + "</tbody></table>"; }
+simple("#plan", J.plan, [["slot", "Slot", 1], ["need", "Need"], [r => "₹" + r.slot_cap_cr + " cr", "Cap", 1], ["option", "Option"], ["player", "Player"], ["overseas", "Type"], [r => r.fix_score == null ? "not ranked" : sg(r.fix_score), "Score", 1], ["why", "Why"], ["switch_when", "Move on when"]]);
+const caps = [...new Map(J.plan.map(r => [r.slot, r.slot_cap_cr])).values()].reduce((a, b) => a + b, 0);
+$("#plan-note").textContent = `Purse ₹27.05 cr, 6 open slots, 3 overseas. Caps total ₹${caps.toFixed(1)} cr, leaving about ₹${(27.05 - caps).toFixed(2)} cr spare. Caps are walk-away prices, not predictions. Main rivals for pace: Lucknow (₹47.45 cr) and Delhi (₹39.5 cr).`;
+simple("#moves", J.moves, [["player", "Player"], ["move", "Move"], ["side", "Side"], [r => sg(r.score), "Score", 1], ["balls", "Pressure balls", 1], ["verdict", "Verdict"]]);
+simple("#cmp", J.cmp, [["area", "Area"], ["rr_wins_lost", "RR gap per 100 balls", 1], ["rr_above", "RR players above the league"], ["rr_below", "RR players below the league"], ["best_buys", "Best buys here"]]);
+
+// reliability tiles + sensitivity
+$("#reltiles").innerHTML = [
+  [J.rel.bat.boot + " of 10", "official batters who stay in the top 10 when matches are resampled"],
+  [J.rel.bowl.boot + " of 10", "the same for bowlers"],
+  [f1(J.rel.bat.split * 1) === "NaN" ? "—" : J.rel.bat.split.toFixed(2), "batting split-half correlation of the final score"],
+  [J.rel.bowl.split.toFixed(2), "bowling split-half correlation of the final score"],
+].map(([b, s]) => `<div class="tile"><b>${b}</b><span>${s}</span></div>`).join("");
+const NAMES = {OFFICIAL: "Official", rr_leverage_filter_top60pct: "Looser live-ball filter (top 60%)", rr_leverage_filter_top40pct: "Stricter live-ball filter (top 40%)",
+  rr_no_importance_weight: "No extra weight for bigger RR gaps", general_pressure_top25pct_leverage: "General pressure (top 25% leverage), not RR's moments",
+  t20i_weight_0: "IPL only (T20I weight 0)", t20i_equal_ipl: "T20I counts as much as IPL", years_equal: "2025 counts as much as 2026", prior_var_x2: "Half as much shrinkage",
+  "prior_var_x0.5": "Twice as much shrinkage", prior_var_2025_26_only: "Shrinkage estimated on 2025–26 only", min_sample_60: "Minimum 60 effective pressure balls", min_sample_25: "Minimum 25 effective pressure balls",
+  "wicket_cost_x1.5": "Wickets worth 1.5× more", score_usual_plus_2D: "Score = usual level + 2 × D", bivariate_predictive: "Model that borrows usual form", no_opp_adjust: "No opposition adjustment",
+  score_P_only: "Score = pressure level only", score_D_only: "Score = pressure minus usual only", score_P_plus_2D: "Score = P + 2 × D", rr_only_moments_holding_up_both_seasons: "Only the 28 moments that hold up in both 2025 and 2026", looser_form_rule_z_minus1: "Looser form rule (out only if 1 standard error below)", no_current_form_rule: "No current-form rule"};
+const sens = {}; J.sensitivity.forEach(s => { (sens[s.scenario] = sens[s.scenario] || {})[s.side] = s; });
+let sh = `<table><thead><tr><th>Alternative</th><th class="n">Batting overlap</th><th>Batting #1</th><th class="n">Bowling overlap</th><th>Bowling #1</th></tr></thead><tbody>`;
+Object.entries(sens).filter(([k]) => k !== "OFFICIAL").forEach(([k, v]) => { sh += `<tr><td>${esc(NAMES[k] || k)}</td><td class="n">${v.bat ? v.bat.overlap : "—"}/10</td><td>${esc(v.bat ? v.bat.no1 : "")}</td><td class="n">${v.bowl ? v.bowl.overlap : "—"}/10</td><td>${esc(v.bowl ? v.bowl.no1 : "")}</td></tr>`; });
+$("#sens").innerHTML = sh + "</tbody></table>";
+let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { drawMoments($("#m-bat").getAttribute("aria-pressed") === "true" ? "bat" : "bowl"); drawGrid(); drawRanks($("#r-bat").getAttribute("aria-pressed") === "true" ? "bat" : "bowl"); }, 150); });
+</script>
+</body>
+</html>
